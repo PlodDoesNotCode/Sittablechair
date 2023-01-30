@@ -1,29 +1,5 @@
-ESX = nil
+local QBCore = exports['qb-core']:GetCoreObject()
 
---[[
-Add this to your databse under items 
-
-greenchair
-
-classicchair
-
-bluechair
-
-officechair
-]]
-Citizen.CreateThread(
-    function()
-        while ESX == nil do
-            TriggerEvent(
-                "esx:getSharedObject",
-                function(obj)
-                    ESX = obj
-                end
-            )
-            Citizen.Wait(0)
-        end
-    end
-)
 
 local ListaObjekata = {
 	`prop_off_chair_05`, --Classic one 
@@ -31,6 +7,7 @@ local ListaObjekata = {
     `prop_skid_chair_02`, -- blue one I guess lol
     `ex_prop_offchair_exec_03` --Office chair
 }
+
 
 
 
@@ -51,6 +28,7 @@ RegisterNetEvent("chair:spawn", function()
     SetEntityHeading(object, heading + 180)
     FreezeEntityPosition(object, true)
     SetModelAsNoLongerNeeded(object)
+    QBCore.Functions.Notify('You have placed your chair', 'success', 2000)
 end)
 
 AddEventHandler("chair:spawn2")
@@ -70,6 +48,7 @@ RegisterNetEvent("chair:spawn2", function()
     SetEntityHeading(object, heading + 180)
     FreezeEntityPosition(object, true)
     SetModelAsNoLongerNeeded(object)
+    QBCore.Functions.Notify('You have placed your chair', 'success', 2000)
 end)
 
 AddEventHandler("chair:spawn3")
@@ -89,6 +68,7 @@ RegisterNetEvent("chair:spawn3", function()
     SetEntityHeading(object, heading + 180)
     FreezeEntityPosition(object, true)
     SetModelAsNoLongerNeeded(object)
+    QBCore.Functions.Notify('You have placed your chair', 'success', 2000)
 end)
 
 AddEventHandler("chair:spawn3")
@@ -108,6 +88,7 @@ RegisterNetEvent("chair:spawn3", function()
     SetEntityHeading(object, heading + 180)
     FreezeEntityPosition(object, true)
     SetModelAsNoLongerNeeded(object)
+    QBCore.Functions.Notify('You have placed your chair', 'success', 2000)
 end)
 
 AddEventHandler("chair:spawn4")
@@ -127,24 +108,25 @@ RegisterNetEvent("chair:spawn4", function()
     SetEntityHeading(object, heading + 180)
     FreezeEntityPosition(object, true)
     SetModelAsNoLongerNeeded(object)
+    QBCore.Functions.Notify('You have placed your chair', 'success', 2000)
 end)
 
 
-RegisterCommand(
-    "takechair",
-    function()
-        for i = 1, #ListaObjekata do
-            local obb = GetClosestObjectOfType(GetEntityCoords(PlayerPedId()), 5.0, ListaObjekata[i], false, true, true)
-            if DoesEntityExist(obb) then
-                NetworkRequestControlOfEntity(obb)
-                while not NetworkHasControlOfEntity(obb) do
-                    Wait(100)
-                end
-                DeleteEntity(obb)
-                DeleteObject(obb)
-                break
+
+
+RegisterCommand("takechair", function()
+    for i = 1, #ListaObjekata do
+        local obb = GetClosestObjectOfType(GetEntityCoords(PlayerPedId()), 5.0, ListaObjekata[i], false, true, true)
+        if DoesEntityExist(obb) then
+            NetworkRequestControlOfEntity(obb)
+            while not NetworkHasControlOfEntity(obb) do
+                Wait(100)
             end
+            DeleteEntity(obb)
+            DeleteObject(obb)
+            break
         end
-        ESX.ShowNotification('You took your ~b~5$~w~ chair!')
     end
-)
+    QBCore.Functions.Notify('You took your chair!', 'error', 2000)
+end)
+
